@@ -1,11 +1,7 @@
-import { Card, Grid, GridItem } from '@chakra-ui/react';
+
 import { useState, useEffect } from 'react';
 import CreateCard from './Card'
 import axios from '../api';
-
-import '../index.css';
-
-// import fetchData from 'App.jsx'
 
 const CardsList = () => {
     const [list, setList] = useState([]);
@@ -36,7 +32,6 @@ const CardsList = () => {
             return Number(el.close_approach_data[0].miss_distance.kilometers)
         }));
 
-
         const fastestNEO = Math.max(...neos.map((el) => {
             return Number(el.close_approach_data[0].miss_distance.kilometers)
 
@@ -56,6 +51,26 @@ const CardsList = () => {
 
         setData(dataForCard);
     }
+
+    useEffect(() => {
+        if(!data) return;
+      
+        let newList = null;
+         if(list.length === 6){
+          newList = list.slice(1).concat([data]);
+        } else {
+          newList = ([...list, data]);
+        }
+      
+        const highestList = newList.map(arr => ({ numberOfPotentiallyHazardousNEOs: arr.numberOfPotentiallyHazardousNEOs, date: arr.date }))
+        .sort((a, b) => b.numberOfPotentiallyHazardousNEOs - a.numberOfPotentiallyHazardousNEOs)
+        .slice(0,2);
+      
+        setList(newList);
+        setHighestList(highestList);
+      }, [data]);
+
+
 
     useEffect(() => {
         const today = new Date();
@@ -80,11 +95,14 @@ const CardsList = () => {
 
     return (
         <div>
-            {neos.map(item => {
         
-            return (
-            <GridItem><CreateCard data={item} key={item.date}/></GridItem>
-                    )
+             {list.map(item => {
+
+                const isHighest = !!highestList.find(hazard => hazard.date === item.date);
+                
+                return (
+                    <CreateCard data={item} key={item.date} isHighest={isHighest}/>
+                )
             })}
         </div>
         
