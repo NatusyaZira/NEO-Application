@@ -1,7 +1,8 @@
-
+import { Card, Grid, GridItem } from '@chakra-ui/react';
 import { useState, useEffect } from 'react';
 import CreateCard from './Card'
 import axios from '../api';
+import '../index.css';
 
 const CardsList = () => {
     const [list, setList] = useState([]);
@@ -16,9 +17,9 @@ const CardsList = () => {
             ,});
         const [date, neos] = Object.entries(response.data.near_earth_objects)[0];
 
-        const maxEstimatedDiameter = Math.max(...neos.map((el) => {
+        const maxEstimatedDiameter = (Math.max(...neos.map((el) => {
             return el.estimated_diameter.kilometers.estimated_diameter_max
-        }));
+        }))).toFixed(3);
 
         const numberOfPotentiallyHazardousNEOs = neos.reduce((acc, el) => {
             if (el.is_potentially_hazardous_asteroid === true) {
@@ -28,15 +29,15 @@ const CardsList = () => {
             }
             }, 0);
             
-        const closestNEO = Math.min(...neos.map((el)=>{
+        const closestNEO = (Math.min(...neos.map((el)=>{
             return Number(el.close_approach_data[0].miss_distance.kilometers)
-        }));
+        }))).toFixed(3);
 
-        const fastestNEO = Math.max(...neos.map((el) => {
-            return Number(el.close_approach_data[0].miss_distance.kilometers)
+        const fastestNEO = (Math.max(...neos.map((el) => {
+            return Number(el.close_approach_data[0].relative_velocity.kilometers_per_hour)
 
 
-        }));
+        }))).toFixed(3);
 
         
 
@@ -84,6 +85,7 @@ const CardsList = () => {
                 return;
             }
             fetchData(currentDate);
+
         }, 5000)
 
         return () => {
@@ -96,14 +98,18 @@ const CardsList = () => {
     return (
         <div>
         
+        <Grid templateColumns='repeat(3, 1fr)' gap={20} className='container'>
+        
              {list.map(item => {
 
                 const isHighest = !!highestList.find(hazard => hazard.date === item.date);
                 
                 return (
-                    <CreateCard data={item} key={item.date} isHighest={isHighest}/>
+                    <GridItem><CreateCard data={item} key={item.date} isHighest={isHighest}/></GridItem>
                 )
             })}
+        
+        </Grid>
         </div>
         
     )

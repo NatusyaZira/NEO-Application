@@ -2,7 +2,7 @@ import axios from 'axios'
 
 axios.defaults.baseURL = "https://api.nasa.gov/neo/rest/v1";
 axios.defaults.params = {
-  api_key: "PXjG2k4gTiQT1uLnemaLCDAX3RDa7jRbL69WIROx",
+  api_key: "QJw6KzeVg1tpq09CA66NX4ICKPBBhuzPK9RqzzWI",
 };
 
 export default axios;
