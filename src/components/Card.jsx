@@ -8,26 +8,20 @@ import {  Box,
     Text } from '@chakra-ui/react';
 
 
-const CreateCard = ({ data})=> {
-    const {
-        maxEstimatedDiameter,
-        numberOfPotentiallyHazardousNEOs,
-        fastestNEO,
-        closestNEO,
-        date
-    } = data;
+const CreateCard = ()=> {
+    
     
     return (
         
         <Card 
             >
-            <CardHeader> <Heading className='heading' as='h4' size='xs'>{date}</Heading>
+            <CardHeader> <Heading className='heading' as='h4' size='xs'></Heading>
             </CardHeader>
             <CardBody >
             <Stack divider={<StackDivider />} spacing='-12'>
                 <Box>
                     <Heading as='h5' size='xs'>
-                       {maxEstimatedDiameter} km
+                        km
                     </Heading>
                     
                      <Text className='text' fontSize='xs'>
@@ -37,7 +31,7 @@ const CreateCard = ({ data})=> {
                 </Box>
                 <Box>
                     <Heading as='h5' size='xs'>
-                    {numberOfPotentiallyHazardousNEOs} pcs
+                     pcs
                     </Heading>
                     <Text fontSize='xs'>
                     number of potentially hazardous NEOs per day
@@ -45,7 +39,7 @@ const CreateCard = ({ data})=> {
                 </Box>
                  <Box>
                     <Heading as='h5' size='xs'>
-                     {closestNEO} km
+                      km
                     </Heading>
                     <Text fontSize='xs'>
                     closest NEO
@@ -53,7 +47,7 @@ const CreateCard = ({ data})=> {
                 </Box>
                 <Box>
                      <Heading as='h5' size='xs'>
-                     {fastestNEO} kph
+                      kph
                     </Heading>
                     <Text fontSize='xs'>
                     fastest NEO
