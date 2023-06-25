@@ -1,8 +1,8 @@
+import React from 'react'
 import CardsList from './components/CardsList'
+// import './App.css'
 
-function App() {
-
-
+const App = () => {
   return (
     <div>
       <CardsList />
@@ -10,4 +10,4 @@ function App() {
   )
 }
 
-export default App;
+export default App

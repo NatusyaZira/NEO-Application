@@ -8,6 +8,8 @@ import '../index.css';
 // import fetchData from 'App.jsx'
 
 const CardsList = () => {
+    const [list, setList] = useState([]);
+    const [highestList, setHighestList] = useState([]);
     const [data, setData] = useState(null);
 
     const fetchData = async (dayInfo) => {
@@ -18,22 +20,72 @@ const CardsList = () => {
             ,});
         const [date, neos] = Object.entries(response.data.near_earth_objects)[0];
 
-        setData();
+        const maxEstimatedDiameter = Math.max(...neos.map((el) => {
+            return el.estimated_diameter.kilometers.estimated_diameter_max
+        }));
+
+        const numberOfPotentiallyHazardousNEOs = neos.reduce((acc, el) => {
+            if (el.is_potentially_hazardous_asteroid === true) {
+                return acc + 1;
+            } else {
+                return acc;
+            }
+            }, 0);
+            
+        const closestNEO = Math.min(...neos.map((el)=>{
+            return Number(el.close_approach_data[0].miss_distance.kilometers)
+        }));
+
+
+        const fastestNEO = Math.max(...neos.map((el) => {
+            return Number(el.close_approach_data[0].miss_distance.kilometers)
+
+
+        }));
+
+        
+
+
+        const dataForCard = {
+            maxEstimatedDiameter,
+            numberOfPotentiallyHazardousNEOs,
+            closestNEO,
+            fastestNEO,
+            date,
+        };
+
+        setData(dataForCard);
     }
-
-
 
     useEffect(() => {
         const today = new Date();
-        fetchData(today);
+        const currentDate = new Date(Date.UTC(today.getFullYear(), today.getMonth(), 1));
+        fetchData(currentDate);
+
+        const interval = setInterval(() => {
+           currentDate.setDate(currentDate.getDate() + 1)
+            if(currentDate.getDate() === today.getDate() + 1){
+                currentDate.setDate(0)
+                return;
+            }
+            fetchData(currentDate);
+        }, 5000)
+
+        return () => {
+            clearInterval(interval);
+        }
     }, []);
     
 
 
     return (
         <div>
+            {neos.map(item => {
         
-        <CreateCard />
+            return (
+            <GridItem><CreateCard data={item} key={item.date}/></GridItem>
+                    )
+            })}
         </div>
         
     )
